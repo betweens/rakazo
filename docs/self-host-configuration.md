@@ -161,7 +161,9 @@ Run `pg_dump` as the owner. The app login would only dump rows it is allowed to 
 `RAKAZO_MIGRATE_ON_START=true` makes the API run `dist/cli/migrate-database.js` and wait for
 exit 0 before it opens its runtime connection or listens. Unset or `false` is the default:
 migrate first (or run that same file as a Job), then start the API. Leave the switch off in
-production so a failed migration does not crash-loop the serving process.
+production so a failed migration does not crash-loop the serving process. Compose does not
+pass this switch: its migrate service runs the command, and the API container is not given
+the owner login.
 
 The switch requires `DATABASE_MIGRATION_URL` to be a different login from `DATABASE_URL`.
 The child process is the existing migrate command, with the environment the API already

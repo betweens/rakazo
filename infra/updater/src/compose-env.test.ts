@@ -63,6 +63,8 @@ const NOT_PASSED: Record<string, string> = {
   RAKAZO_COMPUTER_PROXY_CONFIG: "built by the API and passed only to the computer prepare command",
   RAKAZO_IMAGE_TAG: "read by deployment tooling and the updater sidecar, not app processes",
   RAKAZO_DEPLOYED_MIGRATIONS: "passed only to the migration CLI by the production deploy script",
+  RAKAZO_MIGRATE_ON_START:
+    "opt-in so the API runs the migrate command; Compose runs that command itself and does not give the API the owner login",
   RAKAZO_IMAGE_TAG_PREVIOUS: "read by the updater sidecar, which has its own environment",
   RAKAZO_DB_PACKAGE_DIR: "passed only to the migration CLI by the desktop app's native stack",
   RAKAZO_ENV_FILE: "set by the desktop app's native stack so no stray .env is read",

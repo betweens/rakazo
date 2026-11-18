@@ -156,6 +156,27 @@ this, set `DATABASE_MIGRATION_URL` to the owner and `DATABASE_URL` to a new logi
 
 Run `pg_dump` as the owner. The app login would only dump rows it is allowed to see.
 
+### Migrate when the API process starts
+
+`RAKAZO_MIGRATE_ON_START=true` makes the API run `dist/cli/migrate-database.js` and wait for
+exit 0 before it opens its runtime connection or listens. Unset or `false` is the default:
+migrate first (or run that same file as a Job), then start the API. Leave the switch off in
+production so a failed migration does not crash-loop the serving process. Compose does not
+pass this switch: its migrate service runs the command, and the API container is not given
+the owner login.
+
+The switch requires `DATABASE_MIGRATION_URL` to be a different login from `DATABASE_URL`.
+The child process is the existing migrate command, with the environment the API already
+unwrapped. It does not set `RAKAZO_DEPLOYED_MIGRATIONS`. Leave that unset to keep today's
+deferred-migration rule. An empty value is explicit, including on a first install; do not
+replace a recorded inventory with an empty value on a later upgrade.
+
+A rolling update overlaps processes even with one replica. Schema deploy already takes a
+Postgres advisory lock, so those overlapping processes do not apply schema migrations at
+the same time. A later start runs the same command again. Applied migrations, checksums,
+and rows stay in place. The image build already emits the migrate file next to `dist/index.js`.
+One single-replica example is in [Chinese](./zh-CN/api-migrate-on-start.md).
+
 ## Database connections
 
 The API keeps a pool of 4 Postgres connections and the worker a pool of 8. `DB_POOL_MAX` sets both

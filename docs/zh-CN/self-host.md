@@ -131,6 +131,7 @@ docker compose --env-file .env -f infra/compose/docker-compose.yml \
 - [模型接入、审批与语音](./self-host-models.md)
 - [备份与恢复](./self-host-backups.md)
 - [升级](./self-host-upgrading.md)
+- [API 启动前迁移（单副本示例）](./api-migrate-on-start.md)
 - [受限网络与镜像下载](./self-host-restricted-network.md)
 - [无影云电脑](../wuying-computers.zh-CN.md)
 - [配置](../self-host-configuration.md)、[账号与登录](../self-host-accounts.md)、[工具集成](../self-host-integrations.md)（英文）

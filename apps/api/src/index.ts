@@ -13,12 +13,14 @@ import { watchEventLoopStalls } from "@rakazo/logging/event-loop";
 import { createApp } from "./app.js";
 import { trackConnections } from "./drain.js";
 import { loadEnv } from "./env.js";
+import { migrateDatabaseOnStart } from "./migrate-on-start.js";
 
 const logger = await createRootLogger(SERVICE_NAMES.api);
 const stopStallWatch = watchEventLoopStalls("api.event_loop_stalled");
 
 try {
   const env = loadEnv();
+  await migrateDatabaseOnStart(process.env, { log: (line) => logger.info(line) });
   const { app, stop, handleUpgrade } = await createApp({ ...env, logger });
   const server = serve({ fetch: app.fetch, port: env.port, hostname: env.apiHost }, () => {
     logger.info("api listening", { "http.host": env.apiHost, "http.port": env.port });
